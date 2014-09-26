@@ -5,7 +5,8 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 var Firebase = require('client-firebase'); // via http://bit.ly/1ncfCj1
 var React = require('React');
-var bbState = require('backbone-react-component');
+// var bbState = require('backbone-react-component');
+var bbState = require('./backbone-react');
 
 // Base URL
 // https://amber-fire-1843.firebaseio.com
@@ -80,6 +81,14 @@ list.on('all', function(e, m) {
 var BookList = React.createClass({
     mixins: [bbState],
 
+    // Override getBackboneState to tell the mixin
+    // HOW to transform Backbone props into JSON state
+    getBackboneState: function (props) {
+        return {
+            books: props.list
+        };
+    },
+
     /**
      * Make the book.
      *
@@ -92,34 +101,25 @@ var BookList = React.createClass({
     },
 
     getBook: function(book) {
+    /* jshint ignore:start */
 
-console.log('An book: ', book);
+        return (<Book key={book.id} data={book}/>);
 
+    /* jshint ignore:end */
     },
 
     handleCommentSubmit: function(book) {
-      // var books = this.state.data; // this needs to be bbState books
-      // var updatedBooks = books.concat([comment]);
-      // this.setState({data: updatedBooks});
     },
 
     render: function () {
     /* jshint ignore:start */
 
-console.log('BookList props: ', this.props);
-console.log('BookList suppoded to have props: ', this.props.list);
-console.log('BookList suppoded to have props: ', this.props.list.models);
-console.log('BookList state: ', this.state);
-
         return (
-            // @TODO
-            // * Add inputs to create new books. This is an event that goes up
-            // * Figure out why React is being a POS with browserify
             <div className="book-list">
               <h1>Books!</h1>
 
-              <div className="">
-                {_.map(this.props.list.models, this.getBook, this)}
+              <div className="books">
+                  {_.map(this.state.books.models, this.getBook)}
               </div>
 
               <h2>Add a new book to the shelf</h2>
@@ -173,15 +173,20 @@ var BookForm = React.createClass({
 // Book
 // ----------------------------------------------------------------------------
 var Book = React.createClass({
+
+    mixins: [bbState],
+
+    // Override getBackboneState to tell the mixin
+    // HOW to transform Backbone props into JSON state
+    getBackboneState: function (props) {
+        return props.data.toJSON();
+    },
+
     render: function () {
     /* jshint ignore:start */
 
-        console.log(this);
-
         return(
-          <div className="book">
-            {this.props}
-          </div>
+            <li className="book">{this.state.title}: By {this.state.author}</li>
         );
 
     /* jshint ignore:end */
@@ -203,3 +208,8 @@ list.on('sync', function() {
       document.getElementById('app-container')
     );
 });
+
+// React.renderComponent(
+//   BookList({collection: list}),
+//   document.getElementById('app-container')
+// );
