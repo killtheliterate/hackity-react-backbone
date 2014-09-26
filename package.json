@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "backbone": "^1.1.2",
+    "backbone-react-component": "^0.7.0",
+    "lodash": "^2.4.1",
+    "react": "^0.11.2"
+  },
+  "devDependencies": {
+    "browserify": "^5.12.0",
+    "gulp": "^3.8.8",
+    "gulp-browserify": "^0.5.0",
+    "gulp-clean": "^0.3.1",
+    "gulp-concat": "^2.4.1",
+    "gulp-connect": "^2.0.6",
+    "gulp-jshint": "^1.8.4",
+    "gulp-rename": "^1.2.0",
+    "gulp-uglify": "^1.0.1",
+    "jshint": "^2.5.6",
+    "reactify": "^0.14.0"
+  }
+}
