@@ -1,17 +1,13 @@
 {
-  "maxerr"        : 50,       // {int} Maximum error before stopping
-  "curly"         : false,    // true: Require {} for every new block or scope
-  "newcap"        : true,     // true: Require capitalization of all constructor functions e.g. `new F()`
-  "quotmark"      : "single", // Quotation mark consistency:
-  "browser"       : true,     // Web Browser (window, document, etc)
-  "jquery"        : true,     // jQuery,
+  "maxerr"        : 50,
+  "curly"         : false,
+  "quotmark"      : "single",
+  "browser"       : true,
   "eqeqeq"        : false,
   "sub"           : true,
 
   // Custom Globals
   "globals"       : {
-    "require": true,
-    "define": true,
-    "google": true
+    "require": true
   }
 }

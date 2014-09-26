@@ -9,7 +9,7 @@ var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 
 gulp.task('clean', function() {
-    return gulp.src('./client/concat.js', {read: false})
+    return gulp.src('./client/build/', {read: false})
         .pipe(clean());
 });
 
@@ -28,15 +28,18 @@ gulp.task('lint', function() {
 gulp.task('scripts', function() {
     gulp.src('client/js/app.js')
         .pipe(browserify({
-            debug : true,
+            debug : !gulp.env.production,
             insertGlobals : true,
             transform: ['reactify']
         }))
-        .pipe(gulp.dest('client/js/concat.js'));
+        .pipe(gulp.dest('client/build'));
 });
 
 gulp.task('watch', function() {
-    gulp.watch('./client/js/*.js', [
+  gulp.watch([
+      './client/js/*.js',
+      './client/js/component/*.js'
+      ], [
         'clean',
         'lint',
         'scripts',
