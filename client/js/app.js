@@ -102,9 +102,20 @@ var BookList = React.createClass({
     getBook: function(book) {
     /* jshint ignore:start */
 
-        return (<Book key={book.id} data={book}/>);
+        // Look at todoMVC example of deleting a todo
+        return (<Book key={book.id} data={book} onBookRemove={this.handleBookRemove.bind(this, book)} />);
 
     /* jshint ignore:end */
+    },
+
+    handleBookRemove: function(book) {
+        var books = this.state.books;
+        books.remove([book]);
+
+        // possibly need to destroy the model as well
+        // book.destroy();
+
+        this.setState({books: books});
     },
 
     handleBookSubmit: function(book) {
@@ -112,6 +123,7 @@ var BookList = React.createClass({
         books.add([book]);
 
         // Update the DOM by setting a new state.
+        // This would ideally be handled by watchBackboneProps()
         this.setState({books: books});
     },
 
@@ -185,11 +197,24 @@ var Book = React.createClass({
         return props.data.toJSON();
     },
 
+    handleClick: function(e) {
+        e.preventDefault();
+
+        // Call a super method.
+        this.props.onBookRemove();
+
+
+        return;
+    },
+
     render: function () {
     /* jshint ignore:start */
 
         return(
-            <li className="book">{this.state.title}: By {this.state.author}</li>
+            <li className="book">
+                <div className="book-info">{this.state.title}: By {this.state.author}</div>
+                <button onClick={this.handleClick}>Remove</button>
+            </li>
         );
 
     /* jshint ignore:end */
@@ -203,8 +228,10 @@ var Book = React.createClass({
 // React? Collection models aren't populated initially, and when they are, it
 // doesn't trigger a reflow.
 //
+// OKAY OKAY! I KNOW WHAT IS UP HERE! IT'S FIREBASE AHAHAHAHAHAAHAHAHAHAHAH
+//
 // @TODO
-// * add a listener in the React component itself, thought that feels wrong.
+// * add a listener in the React component itself, though that feels wrong.
 list.on('sync', function() {
     React.renderComponent(
       BookList({list: list}),
