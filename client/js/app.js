@@ -89,16 +89,15 @@ var BookList = React.createClass({
         };
     },
 
-    /**
-     * Make the book.
-     *
-     * @param {object} book - the book
-     */
-    makeBook: function (book) {
-    /* jshint ignore:start */
-
-    /* jshint ignore:end */
-    },
+    // @TODO
+    // THIS SHOULD PROBABLY WORK!
+    // I think this is not working, possibly because of Firebase interactions.
+    // This makes it a bit more difficult. This is where we would set up how we
+    // interpret Backbone shiz.
+    //
+    // watchBackboneProps: function(props, listenTo) {
+    //
+    // },
 
     getBook: function(book) {
     /* jshint ignore:start */
@@ -108,7 +107,12 @@ var BookList = React.createClass({
     /* jshint ignore:end */
     },
 
-    handleCommentSubmit: function(book) {
+    handleBookSubmit: function(book) {
+        var books = this.state.books;
+        books.add([book]);
+
+        // Update the DOM by setting a new state.
+        this.setState({books: books});
     },
 
     render: function () {
@@ -116,14 +120,15 @@ var BookList = React.createClass({
 
         return (
             <div className="book-list">
-              <h1>Books!</h1>
+                <h1>Books!</h1>
 
-              <div className="books">
-                  {_.map(this.state.books.models, this.getBook)}
-              </div>
+                <div className="books">
+                    {_.map(this.state.books.models, this.getBook)}
+                </div>
 
-              <h2>Add a new book to the shelf</h2>
-              <BookForm onCommentSubmit={this.handleBookSubmit} />
+                <h2>Add a new book to the shelf</h2>
+
+                <BookForm onBookSubmit={this.handleBookSubmit} />
             </div>
         );
 
@@ -140,16 +145,16 @@ var BookForm = React.createClass({
         var author = this.refs.author.getDOMNode().value.trim();
 
         // Bail.
-        if (!text || !author) {
+        if (!title || !author) {
           return;
         }
 
         // Call a super method.
-        this.props.onCommentSubmit({author: author, text: text});
+        this.props.onBookSubmit({title: title, author: author});
 
         // Clear out fields.
+        this.refs.title.getDOMNode().value = '';
         this.refs.author.getDOMNode().value = '';
-        this.refs.text.getDOMNode().value = '';
 
         return;
     },
@@ -176,8 +181,6 @@ var Book = React.createClass({
 
     mixins: [bbState],
 
-    // Override getBackboneState to tell the mixin
-    // HOW to transform Backbone props into JSON state
     getBackboneState: function (props) {
         return props.data.toJSON();
     },
