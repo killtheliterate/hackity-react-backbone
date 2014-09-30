@@ -10,7 +10,7 @@ Backbone.$ = $; // attach jQuery to Backbone
 // Firebase
 // Base URL: https://amber-fire-1843.firebaseio.com
 // ----------------------------------------------------------------------------
-var BackboneFirebase = require('../../backbone-firebase');
+var BackboneFirebase = require('../../util/backbone-firebase');
 
 // Backbone
 // ----------------------------------------------------------------------------

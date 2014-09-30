@@ -4,7 +4,7 @@ var _ = require('lodash');
 var $ = require('jquery');
 var Backbone = require('backbone');
 var React = require('React');
-var bbState = require('../../backbone-react');
+var bbState = require('../../util/backbone-react');
 
 Backbone.$ = $; // attach jQuery to Backbone
 

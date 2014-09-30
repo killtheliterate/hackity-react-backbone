@@ -5,7 +5,7 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 var Firebase = require('client-firebase'); // via http://bit.ly/1ncfCj1
 var React = require('React');
-var bbState = require('../../backbone-react');
+var bbState = require('../../util/backbone-react');
 
 Backbone.$ = $; // attach jQuery to Backbone
 
@@ -27,6 +27,16 @@ module.exports = React.createClass({
         };
     },
 
+    // @TODO
+    // THIS SHOULD PROBABLY WORK!
+    // I think this is not working, possibly because of Firebase interactions.
+    // This makes it a bit more difficult. This is where we would set up how we
+    // interpret Backbone shiz.
+    //
+    // watchBackboneProps: function(props, listenTo) {
+    //
+    // },
+
     getBook: function(book) {
     /* jshint ignore:start */
 
@@ -40,6 +50,8 @@ module.exports = React.createClass({
         var books = this.state.books;
         books.remove([book]);
 
+        // Update the DOM by setting a new state.
+        // This would ideally be handled by watchBackboneProps()
         this.setState({books: books});
     },
 
@@ -58,6 +70,7 @@ module.exports = React.createClass({
                 <h1>Books!</h1>
 
                 <div className="books">
+                    {/* Should only create a list of books if models exist */}
                     {_.map(this.state.books.models, this.getBook)}
                 </div>
 

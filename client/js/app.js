@@ -5,14 +5,14 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 var Firebase = require('client-firebase'); // via http://bit.ly/1ncfCj1
 var React = require('React');
-var bbState = require('./backbone-react');
+var bbState = require('./util/backbone-react');
 
 Backbone.$ = $; // attach jQuery to Backbone
 
 // Firebase
 // Base URL: https://amber-fire-1843.firebaseio.com
 // ----------------------------------------------------------------------------
-var BackboneFirebase = require('./backbone-firebase');
+var BackboneFirebase = require('./util/backbone-firebase');
 
 // React
 // ----------------------------------------------------------------------------
@@ -51,13 +51,21 @@ list.on('sync', function() {
 
 // Log Firebase sync.
 list.on('all', function(e, m) {
-    console.log(e);
-    console.log(m);
+    // console.log(e);
+    // console.log(m);
 });
 
+// @TODO
+// This shouldn't need to be in a listener... Instead, watchBackboneProps()
+// should be hearing changes, and kicking off React component reflows.
 list.on('sync', function() {
     React.renderComponent(
       BookList({list: list}),
       document.getElementById('app-container')
     );
 });
+
+// React.renderComponent(
+//   BookList({collection: list}),
+//   document.getElementById('app-container')
+// );
