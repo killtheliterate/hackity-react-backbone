@@ -6,6 +6,8 @@ var Backbone = require('backbone');
 var Firebase = require('client-firebase'); // via http://bit.ly/1ncfCj1
 var React = require('React');
 var bbState = require('../../util/backbone-react');
+var existy = require('../../util/truth').existy;
+var truthy = require('../../util/truth').truthy;
 
 Backbone.$ = $; // attach jQuery to Backbone
 
@@ -19,6 +21,10 @@ var BookForm = require('../BookForm/viewBookForm.jsx');
 module.exports = React.createClass({
     mixins: [bbState],
 
+    componentDidMount: function () {
+console.log(this.state);
+    },
+
     // Override getBackboneState to tell the mixin
     // HOW to transform Backbone props into JSON state
     getBackboneState: function (props) {
@@ -27,15 +33,9 @@ module.exports = React.createClass({
         };
     },
 
-    // @TODO
-    // THIS SHOULD PROBABLY WORK!
-    // I think this is not working, possibly because of Firebase interactions.
-    // This makes it a bit more difficult. This is where we would set up how we
-    // interpret Backbone shiz.
-    //
-    // watchBackboneProps: function(props, listenTo) {
-    //
-    // },
+    watchBackboneProps: function (props, listenTo) {
+        listenTo(props.list, 'all');
+    },
 
     getBook: function(book) {
     /* jshint ignore:start */
@@ -52,7 +52,7 @@ module.exports = React.createClass({
 
         // Update the DOM by setting a new state.
         // This would ideally be handled by watchBackboneProps()
-        this.setState({books: books});
+        // this.setState({books: books});
     },
 
     handleBookSubmit: function(book) {
@@ -65,13 +65,16 @@ module.exports = React.createClass({
     render: function () {
     /* jshint ignore:start */
 
+        // There has to be a better way to check existence of nested props.
+        var books = existy(this.state.books) ? this.state.books.models : [];
+
         return (
             <div className="book-list">
                 <h1>Books!</h1>
 
                 <div className="books">
                     {/* Should only create a list of books if models exist */}
-                    {_.map(this.state.books.models, this.getBook)}
+                    {_.map(books, this.getBook)}
                 </div>
 
                 <h2>Add a new book to the shelf</h2>

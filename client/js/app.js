@@ -58,14 +58,14 @@ list.on('all', function(e, m) {
 // @TODO
 // This shouldn't need to be in a listener... Instead, watchBackboneProps()
 // should be hearing changes, and kicking off React component reflows.
-list.on('sync', function() {
-    React.renderComponent(
-      BookList({list: list}),
-      document.getElementById('app-container')
-    );
-});
+// list.on('sync', function() {
+//     React.renderComponent(
+//       BookList({list: list}),
+//       document.getElementById('app-container')
+//     );
+// });
 
-// React.renderComponent(
-//   BookList({collection: list}),
-//   document.getElementById('app-container')
-// );
+React.renderComponent(
+  BookList({collection: list}),
+  document.getElementById('app-container')
+);
