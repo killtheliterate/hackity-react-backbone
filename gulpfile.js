@@ -38,7 +38,8 @@ gulp.task('scripts', function() {
 gulp.task('watch', function() {
   gulp.watch([
       './client/js/*.js',
-      './client/js/component/*.js'
+      './client/js/component/**/*.js',
+      './client/js/component/**/*.jsx'
       ], [
         'clean',
         'lint',

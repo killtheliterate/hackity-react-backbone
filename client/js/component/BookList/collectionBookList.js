@@ -12,7 +12,7 @@ Backbone.$ = $; // attach jQuery to Backbone
 // ----------------------------------------------------------------------------
 var BackboneFirebase = require('../../backbone-firebase');
 
-// Other modules
+// Backbone models
 // ----------------------------------------------------------------------------
 var Book = require('../Book/modelBook');
 
