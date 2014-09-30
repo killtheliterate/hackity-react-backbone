@@ -51,21 +51,22 @@ list.on('sync', function() {
 
 // Log Firebase sync.
 list.on('all', function(e, m) {
-    // console.log(e);
-    // console.log(m);
+    console.log(e);
+    console.log(m);
 });
 
 // @TODO
-// This shouldn't need to be in a listener... Instead, watchBackboneProps()
-// should be hearing changes, and kicking off React component reflows.
-// list.on('sync', function() {
-//     React.renderComponent(
-//       BookList({list: list}),
-//       document.getElementById('app-container')
-//     );
-// });
-
-React.renderComponent(
-  BookList({collection: list}),
-  document.getElementById('app-container')
-);
+// Investigate what is really happening here. Essentially, everytime a sync is
+// happening, the React component is being re-rendered. This may be totally
+// appropriate, or it may be giving me a sense of false optimism. However, I'm
+// pretty sure this is legit, since it works when using an Events.once().
+//
+// See:
+// * http://bit.ly/1vsMHGv
+// * http://bit.ly/Zphc6s
+list.once('sync', function() {
+    React.renderComponent(
+      BookList({list: list}),
+      document.getElementById('app-container')
+    );
+});

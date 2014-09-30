@@ -21,12 +21,6 @@ var BookForm = require('../BookForm/viewBookForm.jsx');
 module.exports = React.createClass({
     mixins: [bbState],
 
-    componentDidMount: function () {
-console.log(this.state);
-    },
-
-    // Override getBackboneState to tell the mixin
-    // HOW to transform Backbone props into JSON state
     getBackboneState: function (props) {
         return {
             books: props.list
@@ -40,7 +34,6 @@ console.log(this.state);
     getBook: function(book) {
     /* jshint ignore:start */
 
-        // Look at todoMVC example of deleting a todo
         return (<Book key={book.id} data={book} onBookRemove={this.handleBookRemove.bind(this, book)} />);
 
     /* jshint ignore:end */
@@ -49,17 +42,11 @@ console.log(this.state);
     handleBookRemove: function(book) {
         var books = this.state.books;
         books.remove([book]);
-
-        // Update the DOM by setting a new state.
-        // This would ideally be handled by watchBackboneProps()
-        // this.setState({books: books});
     },
 
     handleBookSubmit: function(book) {
         var books = this.state.books;
         books.add([book]);
-
-        this.setState({books: books});
     },
 
     render: function () {
@@ -73,7 +60,6 @@ console.log(this.state);
                 <h1>Books!</h1>
 
                 <div className="books">
-                    {/* Should only create a list of books if models exist */}
                     {_.map(books, this.getBook)}
                 </div>
 
