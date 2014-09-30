@@ -1,54 +1,31 @@
-/** @jsx React.DOM */
-
+// Base modules
+// ----------------------------------------------------------------------------
 var _ = require('lodash');
 var $ = require('jquery');
 var Backbone = require('backbone');
 var Firebase = require('client-firebase'); // via http://bit.ly/1ncfCj1
 var React = require('React');
-// var bbState = require('backbone-react-component');
 var bbState = require('./backbone-react');
 
-// Base URL
-// https://amber-fire-1843.firebaseio.com
+Backbone.$ = $; // attach jQuery to Backbone
+
+// Firebase
+// Base URL: https://amber-fire-1843.firebaseio.com
+// ----------------------------------------------------------------------------
 var BackboneFirebase = require('./backbone-firebase');
 
-
-Backbone.$ = $;
-
-// Model & Collection
+// React components
 // ----------------------------------------------------------------------------
+var BookList = require('./component/BookList/viewBookList.jsx');
 
-var BookModel = Backbone.Model.extend({
-    defaults: function() {
-        return {
-          title: 'No book title given',
-          author: 'No author given'
-        };
-    },
-
-    initialize: function() {
-        if (!this.get('title')) {
-            this.set({'title': this.defaults().title});
-        }
-
-        if (!this.get('author')) {
-            this.set({'author': this.defaults().title});
-        }
-    },
-
-    firebase: 'https://amber-fire-1843.firebaseio.com/book'
-});
-
-var BookListCollection = BackboneFirebase.Collection.extend({
-    model: BookModel,
-
-    firebase: 'https://amber-fire-1843.firebaseio.com',
-});
-
-list = new BookListCollection();
+// Initialize App
+// ----------------------------------------------------------------------------
+var collection = require('./component/BookList/collectionBookList');
+var list = new collection();
 
 list.on('sync', function() {
-    // Stub some stuff.
+
+    // Stub some Firebase data if none exists.
     var book1, book2;
     if (list.length < 1) {
 
@@ -68,178 +45,15 @@ list.on('sync', function() {
 
 }, this);
 
-window.list = list;
-
-// Listen to Firebase HAPPENING! IT'S HAPPENING!
+// Log Firebase sync.
 list.on('all', function(e, m) {
-    // console.log(e);
-    // console.log(m);
+    console.log(e);
+    console.log(m);
 });
 
-// BookList
-// ----------------------------------------------------------------------------
-var BookList = React.createClass({
-    mixins: [bbState],
-
-    // Override getBackboneState to tell the mixin
-    // HOW to transform Backbone props into JSON state
-    getBackboneState: function (props) {
-        return {
-            books: props.list
-        };
-    },
-
-    // @TODO
-    // THIS SHOULD PROBABLY WORK!
-    // I think this is not working, possibly because of Firebase interactions.
-    // This makes it a bit more difficult. This is where we would set up how we
-    // interpret Backbone shiz.
-    //
-    // watchBackboneProps: function(props, listenTo) {
-    //
-    // },
-
-    getBook: function(book) {
-    /* jshint ignore:start */
-
-        // Look at todoMVC example of deleting a todo
-        return (<Book key={book.id} data={book} onBookRemove={this.handleBookRemove.bind(this, book)} />);
-
-    /* jshint ignore:end */
-    },
-
-    handleBookRemove: function(book) {
-        var books = this.state.books;
-        books.remove([book]);
-
-        // possibly need to destroy the model as well
-        // book.destroy();
-
-        this.setState({books: books});
-    },
-
-    handleBookSubmit: function(book) {
-        var books = this.state.books;
-        books.add([book]);
-
-        // Update the DOM by setting a new state.
-        // This would ideally be handled by watchBackboneProps()
-        this.setState({books: books});
-    },
-
-    render: function () {
-    /* jshint ignore:start */
-
-        return (
-            <div className="book-list">
-                <h1>Books!</h1>
-
-                <div className="books">
-                    {_.map(this.state.books.models, this.getBook)}
-                </div>
-
-                <h2>Add a new book to the shelf</h2>
-
-                <BookForm onBookSubmit={this.handleBookSubmit} />
-            </div>
-        );
-
-    /* jshint ignore:end */
-    }
-});
-
-// BookForm
-// ----------------------------------------------------------------------------
-var BookForm = React.createClass({
-    handleSubmit: function(e) {
-        e.preventDefault();
-        var title = this.refs.title.getDOMNode().value.trim();
-        var author = this.refs.author.getDOMNode().value.trim();
-
-        // Bail.
-        if (!title || !author) {
-          return;
-        }
-
-        // Call a super method.
-        this.props.onBookSubmit({title: title, author: author});
-
-        // Clear out fields.
-        this.refs.title.getDOMNode().value = '';
-        this.refs.author.getDOMNode().value = '';
-
-        return;
-    },
-
-    render: function () {
-    /* jshint ignore:start */
-
-        return (
-          <form className="book-form" onSubmit={this.handleSubmit}>
-            <input type="text" placeholder="Book title" ref="title" />
-            <input type="text" placeholder="Book author" ref="author" />
-            <input type="submit" value="Post" />
-          </form>
-        );
-
-    /* jshint ignore:end */
-    }
-
-});
-
-// Book
-// ----------------------------------------------------------------------------
-var Book = React.createClass({
-
-    mixins: [bbState],
-
-    getBackboneState: function (props) {
-        return props.data.toJSON();
-    },
-
-    handleClick: function(e) {
-        e.preventDefault();
-
-        // Call a super method.
-        this.props.onBookRemove();
-
-
-        return;
-    },
-
-    render: function () {
-    /* jshint ignore:start */
-
-        return(
-            <li className="book">
-                <div className="book-info">{this.state.title}: By {this.state.author}</div>
-                <button onClick={this.handleClick}>Remove</button>
-            </li>
-        );
-
-    /* jshint ignore:end */
-    }
-});
-
-// Render top-most component
-// ----------------------------------------------------------------------------
-
-// This shouldn't need to be in a listener... Isn't that the fucking point of
-// React? Collection models aren't populated initially, and when they are, it
-// doesn't trigger a reflow.
-//
-// OKAY OKAY! I KNOW WHAT IS UP HERE! IT'S FIREBASE AHAHAHAHAHAAHAHAHAHAHAH
-//
-// @TODO
-// * add a listener in the React component itself, though that feels wrong.
 list.on('sync', function() {
     React.renderComponent(
       BookList({list: list}),
       document.getElementById('app-container')
     );
 });
-
-// React.renderComponent(
-//   BookList({collection: list}),
-//   document.getElementById('app-container')
-// );
