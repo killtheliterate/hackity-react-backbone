@@ -44,5 +44,4 @@ module.exports = React.createClass({
 
     /* jshint ignore:end */
     }
-
 });

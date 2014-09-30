@@ -9,7 +9,7 @@ var bbState = require('../../backbone-react');
 
 Backbone.$ = $; // attach jQuery to Backbone
 
-// React components
+// React
 // ----------------------------------------------------------------------------
 var Book = require('../Book/viewBook.jsx');
 var BookForm = require('../BookForm/viewBookForm.jsx');
@@ -27,16 +27,6 @@ module.exports = React.createClass({
         };
     },
 
-    // @TODO
-    // THIS SHOULD PROBABLY WORK!
-    // I think this is not working, possibly because of Firebase interactions.
-    // This makes it a bit more difficult. This is where we would set up how we
-    // interpret Backbone shiz.
-    //
-    // watchBackboneProps: function(props, listenTo) {
-    //
-    // },
-
     getBook: function(book) {
     /* jshint ignore:start */
 
@@ -50,9 +40,6 @@ module.exports = React.createClass({
         var books = this.state.books;
         books.remove([book]);
 
-        // possibly need to destroy the model as well
-        // book.destroy();
-
         this.setState({books: books});
     },
 
@@ -60,8 +47,6 @@ module.exports = React.createClass({
         var books = this.state.books;
         books.add([book]);
 
-        // Update the DOM by setting a new state.
-        // This would ideally be handled by watchBackboneProps()
         this.setState({books: books});
     },
 

@@ -14,14 +14,18 @@ Backbone.$ = $; // attach jQuery to Backbone
 // ----------------------------------------------------------------------------
 var BackboneFirebase = require('./backbone-firebase');
 
-// React components
+// React
 // ----------------------------------------------------------------------------
 var BookList = require('./component/BookList/viewBookList.jsx');
 
-// Initialize App
+// Backbone
 // ----------------------------------------------------------------------------
-var collection = require('./component/BookList/collectionBookList');
-var list = new collection();
+var Collection = require('./component/BookList/collectionBookList');
+var Book = require('./component/Book/modelBook');
+
+// App
+// ----------------------------------------------------------------------------
+var list = new Collection();
 
 list.on('sync', function() {
 
@@ -29,12 +33,12 @@ list.on('sync', function() {
     var book1, book2;
     if (list.length < 1) {
 
-        book1 = new BookModel({
+        book1 = new Book({
             title: 'Moby Dick',
             author: 'Herman Melville'
         });
 
-        book2 = new BookModel({
+        book2 = new Book({
             title: 'Don Quixote',
             author: 'Cervantes'
         });
