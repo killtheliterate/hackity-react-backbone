@@ -3,6 +3,11 @@ hackity-react-backbone
 
 Prototyping some ideas for replacing Backbone.Views with React components
 
+Development:
+```
+$ gulp --fatal=off # 'cause YOLO, amirite
+```
+
 Todo:
   * Bust react components into separate files
   * investigate why watchBackboneProps() isn't working. Using watchBackboneProps() should allow us to avoid explicitly setting state in callbacks.
