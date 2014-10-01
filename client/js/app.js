@@ -51,8 +51,8 @@ list.on('sync', function() {
 
 // Log Firebase sync.
 list.on('all', function(e, m) {
-    console.log(e);
-    console.log(m);
+    // console.log(e);
+    // console.log(m);
 });
 
 // @TODO
