@@ -3,11 +3,55 @@
 var _ = require('lodash');
 var $ = require('jquery');
 var Backbone = require('backbone');
-var Firebase = require('client-firebase'); // via http://bit.ly/1ncfCj1
+var Firebase = require('client-firebase'); // @see http://bit.ly/1ncfCj1
 var React = require('React');
 var bbState = require('../../util/backbone-react');
 
 Backbone.$ = $; // attach jQuery to Backbone
+
+// React
+// ----------------------------------------------------------------------------
+var BookItem = React.createClass({
+    mixins: [bbState],
+
+    getBackboneState: function (props) {
+        return props.data.toJSON();
+    },
+
+    watchBackboneProps: function (props, listenTo) {
+        listenTo(props.data, 'all');
+    },
+
+    buildField: function(el, prop) {
+    /* jshint ignore:start */
+
+        // var boundClick = _.partialRight(this.props.onEdit, el, prop);
+        var boundClick = this.props.onEdit.bind(null, el, prop); // @see http://bit.ly/1vykn7F
+
+        return (<span onClick={boundClick}>{el}</span>);
+
+    /* jshint ignore:end */
+    },
+
+    render: function() {
+    /* jshint ignore:start */
+
+        var titleAndAuthor = {title: this.state.title, author: this.state.author};
+
+        var fields = _.map(titleAndAuthor, this.buildField);
+
+        return(
+            <div className="book-info">
+
+              {fields[0]} <span>: By </span> {fields[1]}
+
+          </div>
+        );
+
+    /* jshint ignore:end */
+    }
+});
+
 
 // Export
 // ----------------------------------------------------------------------------
@@ -16,7 +60,10 @@ module.exports = React.createClass({
     mixins: [bbState],
 
     getBackboneState: function (props) {
-        return props.data.toJSON();
+
+      return {
+          book: props.data
+      };
     },
 
     watchBackboneProps: function (props, listenTo) {
@@ -32,8 +79,10 @@ module.exports = React.createClass({
         return;
     },
 
-    handleEdit: function(el, prop, e) {
-        e.preventDefault();
+    handleEdit: function(el, prop) {
+        var book = this.state.book;
+
+console.log(arguments);
 
         // @TODO
         // * Address best practices around this method for setting state.
@@ -46,7 +95,7 @@ module.exports = React.createClass({
         // So, yea, this would be fairly trivial to do more "happy path" by just
         // changing what this.buildField does, spawing a new React component
         // that delegates back to this class. See this.buildField().
-        this.props.data.set(prop, 'Revision');
+        book.set(prop, 'Revision');
 
         // Replace React element with an input field that sets state by using
         // something like this.props.data.set(prop, 'Revision');
@@ -61,30 +110,12 @@ module.exports = React.createClass({
     buildInput: function() {
     },
 
-    buildField: function(el, prop) {
-    /* jshint ignore:start */
-
-        var boundClick = this.handleEdit.bind(this, el, prop);
-
-        return (<span onClick={boundClick}>{el}</span>);
-
-    /* jshint ignore:end */
-    },
-
     render: function () {
     /* jshint ignore:start */
 
-        var titleAndAuthor = {title: this.state.title, author: this.state.author}
-
-        var fields = _.map(titleAndAuthor, this.buildField)
-
         return(
             <li className="book">
-                <div className="book-info">
-
-                  {fields[0]} <span>: By </span> {fields[1]}
-
-                </div>
+                <BookItem key={this.state.book.id} data={this.state.book} onEdit={this.handleEdit} />
 
                 <button onClick={this.handleRemove}>Remove</button>
             </li>

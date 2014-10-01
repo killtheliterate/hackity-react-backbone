@@ -45,11 +45,55 @@ module.exports = Backbone.Model.extend({
 var _ = require('lodash');
 var $ = require('jquery');
 var Backbone = require('backbone');
-var Firebase = require('client-firebase'); // via http://bit.ly/1ncfCj1
+var Firebase = require('client-firebase'); // @see http://bit.ly/1ncfCj1
 var React = require('React');
 var bbState = require('../../util/backbone-react');
 
 Backbone.$ = $; // attach jQuery to Backbone
+
+// React
+// ----------------------------------------------------------------------------
+var BookItem = React.createClass({displayName: 'BookItem',
+    mixins: [bbState],
+
+    getBackboneState: function (props) {
+        return props.data.toJSON();
+    },
+
+    watchBackboneProps: function (props, listenTo) {
+        listenTo(props.data, 'all');
+    },
+
+    buildField: function(el, prop) {
+    /* jshint ignore:start */
+
+        // var boundClick = _.partialRight(this.props.onEdit, el, prop);
+        var boundClick = this.props.onEdit.bind(null, el, prop); // @see http://bit.ly/1vykn7F
+
+        return (React.DOM.span({onClick: boundClick}, el));
+
+    /* jshint ignore:end */
+    },
+
+    render: function() {
+    /* jshint ignore:start */
+
+        var titleAndAuthor = {title: this.state.title, author: this.state.author};
+
+        var fields = _.map(titleAndAuthor, this.buildField);
+
+        return(
+            React.DOM.div({className: "book-info"}, 
+
+              fields[0], " ", React.DOM.span(null, ": By "), " ", fields[1]
+
+          )
+        );
+
+    /* jshint ignore:end */
+    }
+});
+
 
 // Export
 // ----------------------------------------------------------------------------
@@ -58,7 +102,10 @@ module.exports = React.createClass({displayName: 'exports',
     mixins: [bbState],
 
     getBackboneState: function (props) {
-        return props.data.toJSON();
+
+      return {
+          book: props.data
+      };
     },
 
     watchBackboneProps: function (props, listenTo) {
@@ -74,8 +121,10 @@ module.exports = React.createClass({displayName: 'exports',
         return;
     },
 
-    handleEdit: function(el, prop, e) {
-        e.preventDefault();
+    handleEdit: function(el, prop) {
+        var book = this.state.book;
+
+console.log(arguments);
 
         // @TODO
         // * Address best practices around this method for setting state.
@@ -88,7 +137,7 @@ module.exports = React.createClass({displayName: 'exports',
         // So, yea, this would be fairly trivial to do more "happy path" by just
         // changing what this.buildField does, spawing a new React component
         // that delegates back to this class. See this.buildField().
-        this.props.data.set(prop, 'Revision');
+        book.set(prop, 'Revision');
 
         // Replace React element with an input field that sets state by using
         // something like this.props.data.set(prop, 'Revision');
@@ -103,30 +152,12 @@ module.exports = React.createClass({displayName: 'exports',
     buildInput: function() {
     },
 
-    buildField: function(el, prop) {
-    /* jshint ignore:start */
-
-        var boundClick = this.handleEdit.bind(this, el, prop);
-
-        return (React.DOM.span({onClick: boundClick}, el));
-
-    /* jshint ignore:end */
-    },
-
     render: function () {
     /* jshint ignore:start */
 
-        var titleAndAuthor = {title: this.state.title, author: this.state.author}
-
-        var fields = _.map(titleAndAuthor, this.buildField)
-
         return(
             React.DOM.li({className: "book"}, 
-                React.DOM.div({className: "book-info"}, 
-
-                  fields[0], " ", React.DOM.span(null, ": By "), " ", fields[1]
-
-                ), 
+                BookItem({key: this.state.book.id, data: this.state.book, onEdit: this.handleEdit}), 
 
                 React.DOM.button({onClick: this.handleRemove}, "Remove")
             )
@@ -370,7 +401,7 @@ list.once('sync', function() {
     );
 });
 
-}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_593f591e.js","/")
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_f3966034.js","/")
 },{"./component/Book/modelBook":1,"./component/BookList/collectionBookList":4,"./component/BookList/viewBookList.jsx":5,"./util/backbone-firebase":7,"./util/backbone-react":8,"React":153,"backbone":154,"buffer":158,"client-firebase":156,"jquery":162,"lodash":163,"oMfpAn":161}],7:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /* jshint ignore:start */
