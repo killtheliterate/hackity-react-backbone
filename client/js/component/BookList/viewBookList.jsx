@@ -31,6 +31,10 @@ module.exports = React.createClass({
         listenTo(props.list, 'all');
     },
 
+    /**
+     * Create a book component for each book in the collection.
+     * @param {obj} book - the book model
+     */
     getBook: function(book) {
     /* jshint ignore:start */
 
@@ -39,11 +43,19 @@ module.exports = React.createClass({
     /* jshint ignore:end */
     },
 
+    /**
+     * Remove book from collection.
+     * @param {obj} book - the book model
+     */
     handleBookRemove: function(book) {
         var books = this.state.books;
         books.remove([book]);
     },
 
+    /**
+     * Add book to collection.
+     * @param {obj} book - the book model
+     */
     handleBookSubmit: function(book) {
         var books = this.state.books;
         books.add([book]);
@@ -56,14 +68,12 @@ module.exports = React.createClass({
         var books = existy(this.state.books) ? this.state.books.models : [];
 
         return (
-            <div className="book-list">
-                <h1>Books!</h1>
-
-                <div className="books">
-                    {_.map(books, this.getBook)}
+            <div className="books">
+                <div className="item-list">
+                  <ul className="list">
+                      {_.map(books, this.getBook)}
+                  </ul>
                 </div>
-
-                <h2>Add a new book to the shelf</h2>
 
                 <BookForm onBookSubmit={this.handleBookSubmit} />
             </div>

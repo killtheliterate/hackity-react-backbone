@@ -65,6 +65,10 @@ module.exports = React.createClass({displayName: 'exports',
         listenTo(props.data, 'all');
     },
 
+    /**
+     * Handle item removal.
+     * @param {obj} e - the event
+     */
     handleRemove: function(e) {
         e.preventDefault();
 
@@ -74,6 +78,12 @@ module.exports = React.createClass({displayName: 'exports',
         return;
     },
 
+    /**
+     * Initiate edit of a field.
+     * @param {string} el - current value
+     * @param {string} prop - property that is being changed
+     * @param {obj} e - the event
+     */
     handleEdit: function(el, prop, e) {
         e.preventDefault();
 
@@ -86,16 +96,27 @@ module.exports = React.createClass({displayName: 'exports',
         $input.show();
         $display.hide();
 
-
         return;
     },
 
+    /**
+     * Change the state of the model.
+     * @param {string} el - current value
+     * @param {string} prop - property that is being changed
+     * @param {obj} e - the event
+     */
     handleInput: function(el, prop, e) {
         var val = e.target.value;
 
         this.props.data.set(prop, val);
     },
 
+    /**
+     * Remove input form on ENTER keypress
+     * @param {string} el - current value
+     * @param {string} prop - property that is being changed
+     * @param {obj} e - the event
+     */
     handleSubmit: function(el, prop, e) {
         var ENTER = 13;
         var editRef = this.refs['edit-' + prop];
@@ -110,19 +131,32 @@ module.exports = React.createClass({displayName: 'exports',
         }
     },
 
+    /**
+     * Spawn fields for pieces on the model.
+     * @param {string} el - current value
+     * @param {string} prop - property that is being changed
+     */
     buildField: function(el, prop) {
     /* jshint ignore:start */
 
+        // Bind handles for this field. This allows us to have more abstracted
+        // handlers, and avoids duplicating code.
         var boundClick = this.handleEdit.bind(null, el, prop);
         var boundChange = this.handleInput.bind(null, el, prop);
         var boundKeyUp = this.handleSubmit.bind(null, el, prop);
+
+        // Dynamically create references for this field. Makes targeting the
+        // element easier.
         var editRef = 'edit-' + prop;
         var displayRef = 'display-' + prop;
 
+        // Dynamically create a targetable class
+        var classes = 'book-field book-field--' + prop;
+
         return (
-          React.DOM.div({className: "book-field"}, 
-            React.DOM.span({onClick: boundClick, ref: displayRef}, el), 
-            React.DOM.input({type: "text", defaultValue: el, className: "hide", ref: editRef, onChange: boundChange, onKeyUp: boundKeyUp})
+          React.DOM.div({className: classes}, 
+            React.DOM.span({onClick: boundClick, ref: displayRef, className: "book-field-display"}, el), 
+            React.DOM.input({type: "text", defaultValue: el, className: "book-field-edit hide", ref: editRef, onChange: boundChange, onKeyUp: boundKeyUp})
           )
         );
 
@@ -132,19 +166,30 @@ module.exports = React.createClass({displayName: 'exports',
     render: function () {
     /* jshint ignore:start */
 
+        // The fields to render, from the model.
         var titleAndAuthor = {title: this.state.title, author: this.state.author}
 
+        // Build an individual field for each field, which allows us to have
+        // more targetted eventing.
         var fields = _.map(titleAndAuthor, this.buildField)
 
         return(
-            React.DOM.li({className: "book"}, 
+            React.DOM.li({className: "list-item"}, 
+              React.DOM.div({className: "book"}, 
+
                 React.DOM.div({className: "book-info"}, 
 
-                  fields[0], " ", React.DOM.span(null, ": By "), " ", fields[1]
+                  fields[0], " ", React.DOM.div({className: "book-field book-field--separator"}, ": By "), " ", fields[1]
 
                 ), 
 
-                React.DOM.button({onClick: this.handleRemove}, "Remove")
+                React.DOM.div({className: "book-remove"}, 
+
+                  React.DOM.button({onClick: this.handleRemove}, "Remove")
+
+                )
+
+              )
             )
         );
 
@@ -168,6 +213,10 @@ Backbone.$ = $; // attach jQuery to Backbone
 // Export
 // ----------------------------------------------------------------------------
 module.exports = React.createClass({displayName: 'exports',
+    /**
+     * Add book to books collection.
+     * @param {obj} e - the event
+     */
     handleSubmit: function(e) {
         e.preventDefault();
         var title = this.refs.title.getDOMNode().value.trim();
@@ -193,9 +242,9 @@ module.exports = React.createClass({displayName: 'exports',
 
         return (
           React.DOM.form({className: "book-form", onSubmit: this.handleSubmit}, 
-            React.DOM.input({type: "text", placeholder: "Book title", ref: "title"}), 
-            React.DOM.input({type: "text", placeholder: "Book author", ref: "author"}), 
-            React.DOM.input({type: "submit", value: "Post"})
+            React.DOM.input({className: "book-form-title", type: "text", placeholder: "Book title", ref: "title"}), 
+            React.DOM.input({className: "book-form-author", type: "text", placeholder: "Book author", ref: "author"}), 
+            React.DOM.input({className: "book-form-submit", type: "submit", value: "Post"})
           )
         );
 
@@ -268,6 +317,10 @@ module.exports = React.createClass({displayName: 'exports',
         listenTo(props.list, 'all');
     },
 
+    /**
+     * Create a book component for each book in the collection.
+     * @param {obj} book - the book model
+     */
     getBook: function(book) {
     /* jshint ignore:start */
 
@@ -276,11 +329,19 @@ module.exports = React.createClass({displayName: 'exports',
     /* jshint ignore:end */
     },
 
+    /**
+     * Remove book from collection.
+     * @param {obj} book - the book model
+     */
     handleBookRemove: function(book) {
         var books = this.state.books;
         books.remove([book]);
     },
 
+    /**
+     * Add book to collection.
+     * @param {obj} book - the book model
+     */
     handleBookSubmit: function(book) {
         var books = this.state.books;
         books.add([book]);
@@ -293,14 +354,12 @@ module.exports = React.createClass({displayName: 'exports',
         var books = existy(this.state.books) ? this.state.books.models : [];
 
         return (
-            React.DOM.div({className: "book-list"}, 
-                React.DOM.h1(null, "Books!"), 
-
-                React.DOM.div({className: "books"}, 
-                    _.map(books, this.getBook)
+            React.DOM.div({className: "books"}, 
+                React.DOM.div({className: "item-list"}, 
+                  React.DOM.ul({className: "list"}, 
+                      _.map(books, this.getBook)
+                  )
                 ), 
-
-                React.DOM.h2(null, "Add a new book to the shelf"), 
 
                 BookForm({onBookSubmit: this.handleBookSubmit})
             )
@@ -386,7 +445,7 @@ list.once('sync', function() {
     );
 });
 
-}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_5ba7f9d3.js","/")
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_eba06a39.js","/")
 },{"./component/Book/modelBook":1,"./component/BookList/collectionBookList":4,"./component/BookList/viewBookList.jsx":5,"./util/backbone-firebase":7,"./util/backbone-react":8,"React":153,"backbone":154,"buffer":158,"client-firebase":156,"jquery":162,"lodash":163,"oMfpAn":161}],7:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /* jshint ignore:start */

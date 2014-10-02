@@ -11,6 +11,10 @@ Backbone.$ = $; // attach jQuery to Backbone
 // Export
 // ----------------------------------------------------------------------------
 module.exports = React.createClass({
+    /**
+     * Add book to books collection.
+     * @param {obj} e - the event
+     */
     handleSubmit: function(e) {
         e.preventDefault();
         var title = this.refs.title.getDOMNode().value.trim();
@@ -36,9 +40,9 @@ module.exports = React.createClass({
 
         return (
           <form className="book-form" onSubmit={this.handleSubmit}>
-            <input type="text" placeholder="Book title" ref="title" />
-            <input type="text" placeholder="Book author" ref="author" />
-            <input type="submit" value="Post" />
+            <input className="book-form-title" type="text" placeholder="Book title" ref="title" />
+            <input className="book-form-author" type="text" placeholder="Book author" ref="author" />
+            <input className="book-form-submit" type="submit" value="Post" />
           </form>
         );
 

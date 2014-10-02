@@ -23,6 +23,10 @@ module.exports = React.createClass({
         listenTo(props.data, 'all');
     },
 
+    /**
+     * Handle item removal.
+     * @param {obj} e - the event
+     */
     handleRemove: function(e) {
         e.preventDefault();
 
@@ -32,6 +36,12 @@ module.exports = React.createClass({
         return;
     },
 
+    /**
+     * Initiate edit of a field.
+     * @param {string} el - current value
+     * @param {string} prop - property that is being changed
+     * @param {obj} e - the event
+     */
     handleEdit: function(el, prop, e) {
         e.preventDefault();
 
@@ -44,16 +54,27 @@ module.exports = React.createClass({
         $input.show();
         $display.hide();
 
-
         return;
     },
 
+    /**
+     * Change the state of the model.
+     * @param {string} el - current value
+     * @param {string} prop - property that is being changed
+     * @param {obj} e - the event
+     */
     handleInput: function(el, prop, e) {
         var val = e.target.value;
 
         this.props.data.set(prop, val);
     },
 
+    /**
+     * Remove input form on ENTER keypress
+     * @param {string} el - current value
+     * @param {string} prop - property that is being changed
+     * @param {obj} e - the event
+     */
     handleSubmit: function(el, prop, e) {
         var ENTER = 13;
         var editRef = this.refs['edit-' + prop];
@@ -68,19 +89,32 @@ module.exports = React.createClass({
         }
     },
 
+    /**
+     * Spawn fields for pieces on the model.
+     * @param {string} el - current value
+     * @param {string} prop - property that is being changed
+     */
     buildField: function(el, prop) {
     /* jshint ignore:start */
 
+        // Bind handles for this field. This allows us to have more abstracted
+        // handlers, and avoids duplicating code.
         var boundClick = this.handleEdit.bind(null, el, prop);
         var boundChange = this.handleInput.bind(null, el, prop);
         var boundKeyUp = this.handleSubmit.bind(null, el, prop);
+
+        // Dynamically create references for this field. Makes targeting the
+        // element easier.
         var editRef = 'edit-' + prop;
         var displayRef = 'display-' + prop;
 
+        // Dynamically create a targetable class
+        var classes = 'book-field book-field--' + prop;
+
         return (
-          <div className='book-field'>
-            <span onClick={boundClick} ref={displayRef}>{el}</span>
-            <input type='text' defaultValue={el} className="hide" ref={editRef} onChange={boundChange} onKeyUp={boundKeyUp} />
+          <div className={classes}>
+            <span onClick={boundClick} ref={displayRef} className="book-field-display">{el}</span>
+            <input type='text' defaultValue={el} className="book-field-edit hide" ref={editRef} onChange={boundChange} onKeyUp={boundKeyUp} />
           </div>
         );
 
@@ -90,19 +124,30 @@ module.exports = React.createClass({
     render: function () {
     /* jshint ignore:start */
 
+        // The fields to render, from the model.
         var titleAndAuthor = {title: this.state.title, author: this.state.author}
 
+        // Build an individual field for each field, which allows us to have
+        // more targetted eventing.
         var fields = _.map(titleAndAuthor, this.buildField)
 
         return(
-            <li className="book">
+            <li className="list-item">
+              <div className="book">
+
                 <div className="book-info">
 
-                  {fields[0]} <span>: By </span> {fields[1]}
+                  {fields[0]} <div className="book-field book-field--separator">: By </div> {fields[1]}
 
                 </div>
 
-                <button onClick={this.handleRemove}>Remove</button>
+                <div className="book-remove">
+
+                  <button onClick={this.handleRemove}>Remove</button>
+
+                </div>
+
+              </div>
             </li>
         );
 
