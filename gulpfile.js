@@ -71,7 +71,7 @@ gulp.task('scripts', function() {
             insertGlobals : true,
             transform: ['reactify']
         }))
-        // .pipe(uglify())
+        .pipe(uglify())
         .pipe(gulp.dest('client/build/js'));
 });
 

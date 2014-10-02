@@ -51,17 +51,11 @@ list.on('sync', function() {
 
 // Log Firebase sync.
 list.on('all', function(e, m) {
-    // console.log(e);
-    // console.log(m);
+    console.log(e);
+    console.log(m);
 });
 
-// @TODO
-// Investigate what is really happening here. Essentially, everytime a sync is
-// happening, the React component is being re-rendered. This may be totally
-// appropriate, or it may be giving me a sense of false optimism. However, I'm
-// pretty sure this is legit, since it works when using an Events.once().
-//
-// See:
+// @see
 // * http://bit.ly/1vsMHGv
 // * http://bit.ly/Zphc6s
 list.once('sync', function() {
