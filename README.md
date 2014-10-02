@@ -28,5 +28,4 @@ $ gulp --fatal=off
 * Another example: http://bit.ly/1rFmJ3z
 
 ### Uh...
-![alt tag](https://www.dropbox.com/s/vtq5tvup143lyq6/Screenshot%202014-10-02%2014.21.33.png?dl=0)
-![alt tag](https://www.dropbox.com/s/o3byx3j2j9bzmcw/Screenshot%202014-10-02%2014.21.38.png?dl=0)
+![alt tag](https://raw.githubusercontent.com/killtheliterate/hackity-react-backbone/master/hackity.gif)
