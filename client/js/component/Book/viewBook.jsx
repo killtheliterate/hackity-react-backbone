@@ -35,38 +35,54 @@ module.exports = React.createClass({
     handleEdit: function(el, prop, e) {
         e.preventDefault();
 
-        // @TODO
-        // * Address best practices around this method for setting state.
-        // * this.props is supposed to be immutable, but in this case, it is
-        // a Backbone model. One possibly solution is to pass this on to yet
-        // another React component that sets things via an event up the chain,
-        // that way we are still respecting the intended immutability of
-        // this.props. At this point, I'm not really worried about it.
-        //
-        // So, yea, this would be fairly trivial to do more "happy path" by just
-        // changing what this.buildField does, spawing a new React component
-        // that delegates back to this class. See this.buildField().
-        this.props.data.set(prop, 'Revision');
+        var editRef = this.refs['edit-' + prop];
+        var displayRef = this.refs['display-' + prop];
 
-        // Replace React element with an input field that sets state by using
-        // something like this.props.data.set(prop, 'Revision');
-        //
-        // * Can possibly do a show hide on a hidden form element, though it'd
-        // be way cooler to do a repalce
-        // * Can possibly pluck the correct field with _.pluck(fields)
+        var $input = $(editRef.getDOMNode());
+        var $display = $(displayRef.getDOMNode());
+
+        $input.show();
+        $display.hide();
+
 
         return;
     },
 
-    buildInput: function() {
+    handleInput: function(el, prop, e) {
+        var val = e.target.value;
+
+        this.props.data.set(prop, val);
+    },
+
+    handleSubmit: function(el, prop, e) {
+        var ENTER = 13;
+        var editRef = this.refs['edit-' + prop];
+        var displayRef = this.refs['display-' + prop];
+
+        var $input = $(editRef.getDOMNode());
+        var $display = $(displayRef.getDOMNode());
+
+        if (e.which === ENTER) {
+          $input.hide();
+          $display.show();
+        }
     },
 
     buildField: function(el, prop) {
     /* jshint ignore:start */
 
-        var boundClick = this.handleEdit.bind(this, el, prop);
+        var boundClick = this.handleEdit.bind(null, el, prop);
+        var boundChange = this.handleInput.bind(null, el, prop);
+        var boundKeyUp = this.handleSubmit.bind(null, el, prop);
+        var editRef = 'edit-' + prop;
+        var displayRef = 'display-' + prop;
 
-        return (<span onClick={boundClick}>{el}</span>);
+        return (
+          <div className='book-field'>
+            <span onClick={boundClick} ref={displayRef}>{el}</span>
+            <input type='text' defaultValue={el} className="hide" ref={editRef} onChange={boundChange} onKeyUp={boundKeyUp} />
+          </div>
+        );
 
     /* jshint ignore:end */
     },

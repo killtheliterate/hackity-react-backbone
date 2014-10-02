@@ -77,38 +77,54 @@ module.exports = React.createClass({displayName: 'exports',
     handleEdit: function(el, prop, e) {
         e.preventDefault();
 
-        // @TODO
-        // * Address best practices around this method for setting state.
-        // * this.props is supposed to be immutable, but in this case, it is
-        // a Backbone model. One possibly solution is to pass this on to yet
-        // another React component that sets things via an event up the chain,
-        // that way we are still respecting the intended immutability of
-        // this.props. At this point, I'm not really worried about it.
-        //
-        // So, yea, this would be fairly trivial to do more "happy path" by just
-        // changing what this.buildField does, spawing a new React component
-        // that delegates back to this class. See this.buildField().
-        this.props.data.set(prop, 'Revision');
+        var editRef = this.refs['edit-' + prop];
+        var displayRef = this.refs['display-' + prop];
 
-        // Replace React element with an input field that sets state by using
-        // something like this.props.data.set(prop, 'Revision');
-        //
-        // * Can possibly do a show hide on a hidden form element, though it'd
-        // be way cooler to do a repalce
-        // * Can possibly pluck the correct field with _.pluck(fields)
+        var $input = $(editRef.getDOMNode());
+        var $display = $(displayRef.getDOMNode());
+
+        $input.show();
+        $display.hide();
+
 
         return;
     },
 
-    buildInput: function() {
+    handleInput: function(el, prop, e) {
+        var val = e.target.value;
+
+        this.props.data.set(prop, val);
+    },
+
+    handleSubmit: function(el, prop, e) {
+        var ENTER = 13;
+        var editRef = this.refs['edit-' + prop];
+        var displayRef = this.refs['display-' + prop];
+
+        var $input = $(editRef.getDOMNode());
+        var $display = $(displayRef.getDOMNode());
+
+        if (e.which === ENTER) {
+          $input.hide();
+          $display.show();
+        }
     },
 
     buildField: function(el, prop) {
     /* jshint ignore:start */
 
-        var boundClick = this.handleEdit.bind(this, el, prop);
+        var boundClick = this.handleEdit.bind(null, el, prop);
+        var boundChange = this.handleInput.bind(null, el, prop);
+        var boundKeyUp = this.handleSubmit.bind(null, el, prop);
+        var editRef = 'edit-' + prop;
+        var displayRef = 'display-' + prop;
 
-        return (React.DOM.span({onClick: boundClick}, el));
+        return (
+          React.DOM.div({className: "book-field"}, 
+            React.DOM.span({onClick: boundClick, ref: displayRef}, el), 
+            React.DOM.input({type: "text", defaultValue: el, className: "hide", ref: editRef, onChange: boundChange, onKeyUp: boundKeyUp})
+          )
+        );
 
     /* jshint ignore:end */
     },
@@ -370,7 +386,7 @@ list.once('sync', function() {
     );
 });
 
-}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_593f591e.js","/")
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_5ba7f9d3.js","/")
 },{"./component/Book/modelBook":1,"./component/BookList/collectionBookList":4,"./component/BookList/viewBookList.jsx":5,"./util/backbone-firebase":7,"./util/backbone-react":8,"React":153,"backbone":154,"buffer":158,"client-firebase":156,"jquery":162,"lodash":163,"oMfpAn":161}],7:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /* jshint ignore:start */
