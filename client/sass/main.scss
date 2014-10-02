@@ -1,0 +1,71 @@
+@import "bootstrap-compass";
+@import "bootstrap-variables";
+@import "bootstrap";
+
+.hidden {
+  display: none;
+}
+
+// ---------------------------------------------------------------------------
+// No bullets.
+%no-bullets {
+
+  // .list
+  > ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  // .list-item
+  > ul > li {
+    list-style: none;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Generic content list.
+.item-list {
+  @extend %no-bullets;
+
+  .list > .list-item {
+    // margin-bottom: rhythm(2);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Generic content list.
+.item-list--inline {
+  @extend %no-bullets;
+
+  > .list {
+  }
+
+  > .list > .list-item {
+    display: inline-block;
+
+    &:last-child {
+    }
+  }
+}
+
+.l-constrained {
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.book {
+  margin: 16px 0;
+}
+
+.book-info {
+  display: inline-block;
+}
+
+.book-remove {
+  display: inline-block;
+  margin-left: 8px;
+}
+
+.book-field {
+  display: inline-block;
+}

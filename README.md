@@ -1,16 +1,15 @@
-hackity-react-backbone
+Hackity some React and Backbone
 ======================
 
 Prototyping some ideas for replacing Backbone.Views with React components
 
 Development:
 ```
-$ gulp --fatal=off # 'cause YOLO, amirite
+$ gem install bundler
+$ bundle install
+$ npm install
+$ gulp --fatal=off
 ```
-
-Todo:
-  * Bust react components into separate files
-  * investigate why watchBackboneProps() isn't working. Using watchBackboneProps() should allow us to avoid explicitly setting state in callbacks.
 
 Links:
   * todo MVC example: http://bit.ly/1nAw4K3

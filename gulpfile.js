@@ -11,6 +11,7 @@ var connect = require('gulp-connect');
 var jshint = require('gulp-jshint');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
+var compass = require('gulp-compass');
 
 // Error handling - http://bit.ly/1mNdCxd
 // Run using $ gulp --fatal=off
@@ -46,21 +47,32 @@ gulp.task('connect', function() {
     });
 });
 
+gulp.task('compass', function() {
+    gulp.src('./client/sass/*.scss')
+        .pipe(compass({
+            config_file: './config.rb',
+            css: 'client/css',
+            sass: 'client/sass',
+            bundle_exec: true
+        }))
+        .pipe(gulp.dest('client/build/css/'));
+});
+
 gulp.task('lint', function() {
     return gulp.src('./client/js/*.js')
-    .pipe(jshint())
-    .pipe(jshint.reporter('default'))
-    .on('error', onError);
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'))
+        .on('error', onError);
 });
 
 gulp.task('scripts', function() {
     gulp.src('client/js/app.js')
-    .pipe(browserify({
-        insertGlobals : true,
-        transform: ['reactify']
-    }))
-    // .pipe(uglify())
-    .pipe(gulp.dest('client/build'));
+        .pipe(browserify({
+            insertGlobals : true,
+            transform: ['reactify']
+        }))
+        // .pipe(uglify())
+        .pipe(gulp.dest('client/build/js'));
 });
 
 gulp.task('watch', function() {
@@ -69,11 +81,14 @@ gulp.task('watch', function() {
     gulp.watch([
         './client/js/*.js',
         './client/js/component/**/*.js',
-        './client/js/component/**/*.jsx'
+        './client/js/component/**/*.jsx',
+        './client/sass/*.scss',
+        './client/sass/**/*.scss'
     ], [
         'clean',
         'lint',
         'scripts',
+        'compass'
     ]);
 });
 
@@ -84,5 +99,6 @@ gulp.task('default', [
     'connect',
     'lint',
     'scripts',
+    'compass',
     'watch'
 ]);

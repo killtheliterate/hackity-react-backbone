@@ -11,25 +11,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <!-- Styles -->
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/main.css">
-
-        <style>
-          .hide {
-            display: none;
-          }
-
-          .book-field span {
-            cursor: pointer;
-          }
-        </style>
-
+        <link rel="stylesheet" href="build/css/main.css">
     </head>
-    <body>
-      <div id="l-container"></div>
 
-      <!-- Build -->
-      <script src="build/app.js"></script>
+    <body>
+
+      <div class="l-constrained">
+        <div id="app"><!-- where the app goes --></div>
+      </div>
+
+      <!-- The App -->
+      <script src="build/js/app.js"></script>
 
     </body>
 </html>

@@ -67,6 +67,6 @@ list.on('all', function(e, m) {
 list.once('sync', function() {
     React.renderComponent(
       BookList({list: list}),
-      document.getElementById('app-container')
+      document.getElementById('app')
     );
 });

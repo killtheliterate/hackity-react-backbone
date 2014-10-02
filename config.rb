@@ -1,5 +1,5 @@
-require "breakpoint"
-require "susy"
+require 'bootstrap-sass'
+require 'compass/import-once/activate'
 
 http_path = "client/"
 css_dir = "client/css"

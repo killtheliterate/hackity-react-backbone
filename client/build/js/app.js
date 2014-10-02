@@ -93,8 +93,17 @@ module.exports = React.createClass({displayName: 'exports',
         var $input = $(editRef.getDOMNode());
         var $display = $(displayRef.getDOMNode());
 
-        $input.show();
-        $display.hide();
+        $input.removeClass('hide');
+        $display.addClass('hide');
+
+        // Give element focus
+        $input.focus();
+
+        // Hide input on blur
+        $input.blur(function(e) {
+          $input.addClass('hide');
+          $display.removeClass('hide');
+        });
 
         return;
     },
@@ -126,8 +135,8 @@ module.exports = React.createClass({displayName: 'exports',
         var $display = $(displayRef.getDOMNode());
 
         if (e.which === ENTER) {
-          $input.hide();
-          $display.show();
+          $input.addClass('hide');
+          $display.removeClass('hide');
         }
     },
 
@@ -179,7 +188,7 @@ module.exports = React.createClass({displayName: 'exports',
 
                 React.DOM.div({className: "book-info"}, 
 
-                  fields[0], " ", React.DOM.div({className: "book-field book-field--separator"}, ": By "), " ", fields[1]
+                  fields[0], React.DOM.div({className: "book-field book-field--separator"}, ": By "), " ", fields[1]
 
                 ), 
 
@@ -441,11 +450,11 @@ list.on('all', function(e, m) {
 list.once('sync', function() {
     React.renderComponent(
       BookList({list: list}),
-      document.getElementById('app-container')
+      document.getElementById('app')
     );
 });
 
-}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_eba06a39.js","/")
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_4c20fb2e.js","/")
 },{"./component/Book/modelBook":1,"./component/BookList/collectionBookList":4,"./component/BookList/viewBookList.jsx":5,"./util/backbone-firebase":7,"./util/backbone-react":8,"React":153,"backbone":154,"buffer":158,"client-firebase":156,"jquery":162,"lodash":163,"oMfpAn":161}],7:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /* jshint ignore:start */

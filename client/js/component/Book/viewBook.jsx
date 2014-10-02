@@ -51,8 +51,17 @@ module.exports = React.createClass({
         var $input = $(editRef.getDOMNode());
         var $display = $(displayRef.getDOMNode());
 
-        $input.show();
-        $display.hide();
+        $input.removeClass('hide');
+        $display.addClass('hide');
+
+        // Give element focus
+        $input.focus();
+
+        // Hide input on blur
+        $input.blur(function(e) {
+          $input.addClass('hide');
+          $display.removeClass('hide');
+        });
 
         return;
     },
@@ -84,8 +93,8 @@ module.exports = React.createClass({
         var $display = $(displayRef.getDOMNode());
 
         if (e.which === ENTER) {
-          $input.hide();
-          $display.show();
+          $input.addClass('hide');
+          $display.removeClass('hide');
         }
     },
 
@@ -137,7 +146,7 @@ module.exports = React.createClass({
 
                 <div className="book-info">
 
-                  {fields[0]} <div className="book-field book-field--separator">: By </div> {fields[1]}
+                  {fields[0]}<div className="book-field book-field--separator">: By </div> {fields[1]}
 
                 </div>
 
