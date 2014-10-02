@@ -309,8 +309,8 @@ th {
 }
 @font-face {
   font-family: 'Glyphicons Halflings';
-  src: url(../../fonts/bootstrap/glyphicons-halflings-regular.eot?1412276143);
-  src: url(../../fonts/bootstrap/glyphicons-halflings-regular.eot?&1412276143#iefix) format("embedded-opentype"), url(../../fonts/bootstrap/glyphicons-halflings-regular.woff?1412276143) format("woff"), url(../../fonts/bootstrap/glyphicons-halflings-regular.ttf?1412276143) format("truetype"), url(../../fonts/bootstrap/glyphicons-halflings-regular.svg?1412276143#glyphicons_halflingsregular) format("svg");
+  src: url(../../../fonts/bootstrap/glyphicons-halflings-regular.eot);
+  src: url(../../../fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix) format("embedded-opentype"), url(../../../fonts/bootstrap/glyphicons-halflings-regular.woff) format("woff"), url(../../../fonts/bootstrap/glyphicons-halflings-regular.ttf) format("truetype"), url(../../../fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular) format("svg");
 }
 .glyphicon {
   position: relative;

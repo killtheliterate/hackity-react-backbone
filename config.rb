@@ -2,7 +2,7 @@ require 'bootstrap-sass'
 require 'compass/import-once/activate'
 
 http_path = "client/"
-css_dir = "client/css"
+css_dir = "client/build/css"
 sass_dir = "client/sass"
 images_dir = "client/img"
 javascripts_dir = "client/js"
