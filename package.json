@@ -3,7 +3,6 @@
     "backbone": "^1.1.2",
     "backbone-react-component": "^0.7.0",
     "client-firebase": "^1.0.1",
-    "firebase": "^1.0.24",
     "jquery": "^2.1.1",
     "lodash": "^2.4.1",
     "react": "^0.11.2",

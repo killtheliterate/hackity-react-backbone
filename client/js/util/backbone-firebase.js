@@ -5,10 +5,10 @@
  */
 (function (win, factory) {
   if (typeof module === 'object' && typeof exports === 'object' && exports === module.exports) {
-    module.exports = factory(require('lodash'), require('backbone'), require('firebase'));
+    module.exports = factory(require('lodash'), require('backbone'), require('client-firebase'));
   }
   else if (typeof define === 'function' && define.amd) {
-    define(['lodash', 'backbone', 'firebase'], factory);
+    define(['lodash', 'backbone', 'client-firebase'], factory);
   }
   else {
     win.Backbone.Firebase = factory(win._, win.Backbone, win.Firebase);
