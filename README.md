@@ -1,5 +1,7 @@
 # Hackity some React and Backbone
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/killtheliterate/hackity-react-backbone.svg)](https://greenkeeper.io/)
+
 A Prototype that demonstrates some ideas for replacing Backbone.Views with React
 components.
 
